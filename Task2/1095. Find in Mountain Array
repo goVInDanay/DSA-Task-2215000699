@@ -1,0 +1,65 @@
+class Solution {
+    public int findInMountainArray(int target, MountainArray mountainArr) {
+        int n = mountainArr.length();
+        int start = 0;
+        int end = n-1;
+        int peak = -1;
+        while(start <= end){
+            int mid = start + (end - start) / 2;
+            if(start < mid && mountainArr.get(mid) < mountainArr.get(mid-1)){
+                end = mid-1;
+            }
+            else if(end > mid && mountainArr.get(mid) < mountainArr.get(mid+1)){
+                start = mid+1;
+            }
+            else{
+                peak = mid;
+                break;
+            }
+        }
+        if(peak == -1){
+            peak = end;
+        }
+        int peakEle = mountainArr.get(peak);
+        if(peakEle == target){
+            return peak;
+        }
+        if(peakEle < target){
+            return -1;
+        }
+        int index = find(0, peak-1, target, mountainArr, true);
+        if( index != -1){
+            return index;
+        }
+        index = find(peak + 1, n-1, target, mountainArr, false);
+        return index;
+    }
+
+    private int find(int start, int end, int target, MountainArray nums, boolean up) {
+        if(up) {
+            while(start<=end) {
+                int mid = (start+end)/2;
+                if(nums.get(mid) == target) {
+                    return mid;
+                } else if(nums.get(mid) < target){
+                    start = mid+1;
+                } else {
+                    end = mid-1;
+                }
+            }
+            return -1;
+        } else {
+            while(start<=end) {
+                int mid = (start+end)/2;
+                if(nums.get(mid) == target) {
+                    return mid;
+                } else if(nums.get(mid) > target){
+                    start = mid+1;
+                } else {
+                    end = mid-1;
+                }
+            }
+            return -1;
+        }
+    }
+}
